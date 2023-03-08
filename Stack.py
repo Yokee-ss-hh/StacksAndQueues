@@ -182,3 +182,145 @@ ms2.push(10)
 ms2.push(-90)
 ms2.push(90)
 print(ms2.get_max())
+
+# ------------------------------------
+# Infix To Prefix
+#  Step 1: First reverse the given expression 
+#  Step 2: If the scanned character is an operand, put it into prefix expression.
+#  Step 3: If the scanned character is an operator and operator's stack is empty, push operator into operators' stack.
+#  Step 4: 
+#      If the operator's stack is not empty, there may be following possibilities.
+#      If the precedence of scanned operator is greater than the top most operator of operator's stack, push this operator into operator 's stack.
+#      If the precedence of scanned operator is less than the top most operator of operator's stack, pop the operators from operator's stack untill we find a low precedence operator than the scanned character. 
+#      If the precedence of scanned operator is equal then check the associativity of the operator. If associativity left to right then simply put into stack. If associativity right to left then pop the operators from stack until we find a low precedence operator.
+#      If the scanned character is opening round bracket ( '(' ), push it into operator's stack.
+#      If the scanned character is closing round bracket ( ')' ), pop out operators from operator's stack until we find an opening bracket ('(' ).
+#  Repeat Step 2,3 and 4 till expression has character 
+#  Step 5: Now pop out all the remaining operators from the operator's stack and push into postfix expression.
+#  Step 6: Exit
+
+def infix_to_prefix(expression): 
+    operators = set(['+', '-', '*', '/', '(', ')', '^'])
+    priority = {'+':1, '-':1, '*':2, '/':2, '^':3}
+    stack = [] # initialization of empty stack
+    output = ''
+    rev_exp = ""
+    for x in expression:
+        if x == '(':
+            rev_exp = ')'+rev_exp
+        elif x == ')':
+            rev_exp = '('+rev_exp
+        else:
+            rev_exp = x + rev_exp
+    for character in rev_exp:
+        if character not in operators:  # if an operand append in postfix expression
+            output+= character
+        elif character=='(':  # else Operators push onto stack
+            stack.append('(')
+        elif character==')':
+            while stack and stack[-1]!= '(':
+                output+=stack.pop()
+            stack.pop()
+        else: 
+            while stack and stack[-1]!='(' and priority[character]<=priority[stack[-1]]:
+                output+=stack.pop()
+            stack.append(character)
+    while stack:
+        output+=stack.pop()
+    return output[::-1]
+
+print(infix_to_prefix("m*n+(p-q)+r"))
+
+# +*mn+-pqr
+
+
+def infix_to_postfix(expression): 
+    
+    operators = set(['+', '-', '*', '/', '(', ')', '^'])
+    priority = {'+':1, '-':1, '*':2, '/':2, '^':3}
+    stack = [] # initialization of empty stack
+    output = ''
+    for character in expression:
+        if character not in operators:  # if an operand append in postfix expression
+            output+= character
+        elif character=='(':  # else Operators push onto stack
+            stack.append('(')
+        elif character==')':
+            while stack and stack[-1]!= '(':
+                output+=stack.pop()
+            stack.pop()
+        else: 
+            while stack and stack[-1]!='(' and priority[character]<=priority[stack[-1]]:
+                output+=stack.pop()
+            stack.append(character)
+    while stack:
+        output+=stack.pop()
+    return output
+        
+print(infix_to_postfix("m*n+(p-q)+r"))
+
+
+
+def prefix_to_infix(expression):
+    stack = []
+    operators = set(['+', '-', '*', '/', '(', ')', '^'])
+    for x in expression[::-1]:
+        if x not in operators:
+            stack.append(x)
+        else:
+            op1 = stack.pop()
+            op2 = stack.pop()
+            stack.append("("+op1+x+op2+")")
+    return stack[0]
+
+print(prefix_to_infix("+*mn+-pqr")) 
+
+
+def postfix_to_infix(expression):
+    stack = []
+    operators = set(['+', '-', '*', '/', '(', ')', '^'])
+    for x in expression:
+        if x not in operators:
+            stack.append(x)
+        else:
+            op1 = stack.pop()
+            op2 = stack.pop()
+            stack.append("("+op2+x+op1+")")
+    return stack[0]
+
+print(postfix_to_infix("mn*pq-+r+"))
+
+
+def prefix_to_postfix(expression):
+    stack = []
+    operators = set(['+', '-', '*', '/', '(', ')', '^'])
+    for x in expression[::-1]:
+        if x not in operators:
+            stack.append(x)
+        else:
+            op1 = stack.pop()
+            op2 = stack.pop()
+            stack.append(op1+op2+x)
+    return stack[0]
+
+print(prefix_to_postfix("+*mn+-pqr"))
+
+
+def postfix_to_prefix(expression):
+    stack = []
+    operators = set(['+', '-', '*', '/', '(', ')', '^'])
+    for x in expression:
+        if x not in operators:
+            stack.append(x)
+        else:
+            op1 = stack.pop()
+            op2 = stack.pop()
+            stack.append(x+op2+op1)
+    return stack[0]
+
+print(postfix_to_prefix("mn*pq-+r+"))
+    
+    
+    
+    
+    
